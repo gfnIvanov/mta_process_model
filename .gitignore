@@ -3,7 +3,12 @@ __pycache__/
 *.py[cod]
 
 # Distribution / packaging
+dist/
 venv/
+eggs/
+.eggs/
+*.egg-info/
+*.egg
 
 # DotEnv configuration
 .env

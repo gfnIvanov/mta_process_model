@@ -25,3 +25,5 @@ repos:
   hooks:
   - id: flake8
     args: [--ignore=E501, src]
+
+exclude: ^data/

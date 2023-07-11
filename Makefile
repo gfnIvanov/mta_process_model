@@ -1,20 +1,35 @@
+.PHONY: install build lint
+
 #################################################################################
 # GLOBALS                                                                       #
 #################################################################################
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-PROFILE = default
-PROJECT_NAME = symptom_recognition
-PYTHON_INTERPRETER = python3
+CMD = poetry run
+
+ifeq (,$(shell which poetry))
+	HAS_POETRY=False
+else
+	HAS_POETRY=True
+endif
+
+check_poetry:
+ifeq (False,$(HAS_POETRY))
+	$(error Please use Poetry)
+endif
+
 
 #################################################################################
-# COMMANDS                                                                      #
+# SERVICE COMMANDS                                                              #
 #################################################################################
 
 ## Install Python Dependencies
-install:
-	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+install: check_poetry
+	poetry install
+
+## Build with setup.py
+build: check_poetry
+	poetry build
 
 ## Lint using flake8
 lint:
@@ -23,3 +38,22 @@ lint:
 ## Pre-commit all files
 prec-all:
 	pre-commit run --all-files
+
+
+#################################################################################
+# MODELS COMMANDS                                                               #
+#################################################################################
+
+# use native models (without additional training)
+
+# example: make use_gpt_native size="medium" text="пациент жалуется на повышенную"
+use_gpt_native: check_poetry
+ifeq (,$(size))
+	$(CMD) use_gpt_native "$(text)"
+else
+	$(CMD) use_gpt_native "--size=$(size)" "$(text)"
+endif
+
+# example: make use_bert_native text="пациент жалуется на повышенную"
+use_bert_native: check_poetry
+	$(CMD) use_bert_native "$(text)"

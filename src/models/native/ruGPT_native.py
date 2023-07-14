@@ -7,7 +7,7 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
 root_dir = Path(__file__).resolve().parents[3]
 
-with open(f"{root_dir}/params/models.yaml") as file:
+with open(root_dir.joinpath("params/models.yaml")) as file:
     models_conf = yaml.load(file, Loader=SafeLoader)
 
 

@@ -1,0 +1,24 @@
+schema: '2.0'
+stages:
+  genetics_to_yaml_file:
+    cmd: poetry run parse_xml --type=genetics 10
+    deps:
+    - path: data/raw/genetics
+      hash: md5
+      md5: 0250714d3186380756572efffbfd1c95.dir
+      size: 546626736
+      nfiles: 21404
+    - path: src/data/process.py
+      hash: md5
+      md5: e86281011265b857e03bfe363ff99321
+      size: 3428
+    params:
+      params/data.yaml:
+        paths.genetics:
+          raw: data/raw/genetics
+          int: data/interim/genetics
+    outs:
+    - path: data/interim/genetics/data.yaml
+      hash: md5
+      md5: 4d1eca3e94955d77c19508bf4d56cf6b
+      size: 462086

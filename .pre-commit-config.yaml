@@ -24,6 +24,6 @@ repos:
   rev: 6.0.0
   hooks:
   - id: flake8
-    args: [--ignore=E501, src]
+    args: ["--ignore=E501,W503", src]
 
 exclude: ^data/

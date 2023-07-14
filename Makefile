@@ -57,3 +57,11 @@ endif
 # example: make use_bert_native text="пациент жалуется на повышенную"
 use_bert_native: check_poetry
 	$(CMD) use_bert_native "$(text)"
+
+
+#################################################################################
+# PREPARE DATA                                                                  #
+#################################################################################
+
+parse_xml: check_poetry
+	dvc repro genetics_to_yaml_file

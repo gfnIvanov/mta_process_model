@@ -1,0 +1,11 @@
+stages:
+  genetics_to_yaml_file:
+    cmd: poetry run parse_xml --type=genetics 10
+    params:
+    - params/data.yaml:
+      - paths.genetics
+    deps:
+    - data/raw/genetics
+    - src/data/process.py
+    outs:
+    - data/interim/genetics/data.yaml

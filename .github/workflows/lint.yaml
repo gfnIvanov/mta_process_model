@@ -13,4 +13,4 @@ jobs:
       - name: flake8 install
         run: pip install flake8
       - name: flake8 check
-        run: flake8 --ignore=E501 src/*
+        run: flake8 --ignore=E501,W503 src/*

@@ -18,3 +18,14 @@ eggs/
 
 # Mac OS-specific storage files
 .DS_Store
+
+# Datasets
+data/interim/genetics/*
+data/processed/*
+data/raw/*
+
+# Log files
+logs/*
+
+# Exclude
+!.gitkeep

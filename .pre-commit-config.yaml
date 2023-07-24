@@ -10,10 +10,17 @@ repos:
   - id: trailing-whitespace
 
 - repo: https://github.com/psf/black
-  rev: 23.3.0
+  rev: 23.7.0
   hooks:
   - id: black
-    language_version: python3.9
+
+- repo: local
+  hooks:
+    - id: mypy
+      name: mypy
+      entry: "make check-types"
+      language: system
+      types: [python]
 
 - repo: https://github.com/PyCQA/autoflake
   rev: v2.2.0

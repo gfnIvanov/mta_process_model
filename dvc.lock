@@ -10,8 +10,20 @@ stages:
       nfiles: 21404
     - path: src/data/process.py
       hash: md5
-      md5: e86281011265b857e03bfe363ff99321
-      size: 3428
+      md5: d99c428ef93ada729bf210f018f58647
+      size: 1180
+    - path: src/data/utils/_parse_xml.py
+      hash: md5
+      md5: 17a4ab1c4bcd4be98c045c0a46889e63
+      size: 2161
+    - path: src/data/utils/base.py
+      hash: md5
+      md5: 4ae8d19cff1f8b2e5b6c3b286980169a
+      size: 332
+    - path: src/data/utils/types.py
+      hash: md5
+      md5: 8079609a003a226bf631f058f9e7150e
+      size: 685
     params:
       params/data.yaml:
         paths.genetics:
@@ -20,5 +32,5 @@ stages:
     outs:
     - path: data/interim/genetics/data.yaml
       hash: md5
-      md5: 4d1eca3e94955d77c19508bf4d56cf6b
-      size: 462086
+      md5: c8848b49aedb1d07f80ec0f7f4ac7a80
+      size: 35531

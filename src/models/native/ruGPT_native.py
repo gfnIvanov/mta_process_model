@@ -14,7 +14,7 @@ with open(root_dir.joinpath("params/models.yaml")) as file:
 @click.command()
 @click.option("--size", default="small")
 @click.argument("text")
-def use_gpt_native(size: str, text: str):
+def use_gpt_native(size: str, text: str) -> None:
     try:
         if size not in list(models_conf["gpt_native"].keys()):
             raise Warning("Use these sizes: [large, medium, small]")
@@ -35,6 +35,6 @@ def use_gpt_native(size: str, text: str):
         for out in outputs:
             print(tokenizer.decode(out, skip_special_tokens=True))
     except Warning as w:
-        click.echo(click.style(w, fg="yellow"))
+        click.echo(click.style(str(w), fg="yellow"))
     except Exception as e:
-        click.echo(click.style(e, fg="red"))
+        click.echo(click.style(str(e), fg="red"))

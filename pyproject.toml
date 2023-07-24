@@ -16,6 +16,8 @@ torch = "^2.0.1"
 pyyaml = "^6.0"
 click = "^8.1.4"
 dvc = "^3.5.1"
+mypy = "^1.4.1"
+types-click = "^7.1.8"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -27,6 +29,10 @@ black = "^23.3.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
 
 [tool.poetry.scripts]
 use_gpt_native = "src.models.native.ruGPT_native:use_gpt_native"

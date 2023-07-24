@@ -6,7 +6,7 @@ from transformers import AutoTokenizer, AutoModelForMaskedLM
 
 @click.command()
 @click.argument("text")
-def use_bert_native(text: str):
+def use_bert_native(text: str) -> None:
     try:
         tokenizer = AutoTokenizer.from_pretrained("alexyalunin/RuBioRoBERTa")
         text_with_mask = text + tokenizer.mask_token + "."
@@ -20,4 +20,4 @@ def use_bert_native(text: str):
         for token in top_3_tokens:
             print(tokenizer.decode([token]))
     except Exception as e:
-        click.echo(click.style(e, fg="red"))
+        click.echo(click.style(str(e), fg="red"))

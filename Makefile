@@ -13,7 +13,7 @@ else
 	HAS_POETRY=True
 endif
 
-check_poetry:
+check-poetry:
 ifeq (False,$(HAS_POETRY))
 	$(error Please use Poetry)
 endif
@@ -24,16 +24,20 @@ endif
 #################################################################################
 
 ## Install Python Dependencies
-install: check_poetry
+install: check-poetry
 	poetry install
 
 ## Build with setup.py
-build: check_poetry
+build: check-poetry
 	poetry build
 
 ## Lint using flake8
 lint:
 	flake8 src
+
+# Check types
+check-types:
+	$(CMD) mypy .
 
 ## Pre-commit all files
 prec-all:
@@ -47,7 +51,7 @@ prec-all:
 # use native models (without additional training)
 
 # example: make use_gpt_native size="medium" text="пациент жалуется на повышенную"
-use_gpt_native: check_poetry
+use-gpt-native: check-poetry
 ifeq (,$(size))
 	$(CMD) use_gpt_native "$(text)"
 else
@@ -55,7 +59,7 @@ else
 endif
 
 # example: make use_bert_native text="пациент жалуется на повышенную"
-use_bert_native: check_poetry
+use-bert-native: check_poetry
 	$(CMD) use_bert_native "$(text)"
 
 
@@ -63,5 +67,5 @@ use_bert_native: check_poetry
 # PREPARE DATA                                                                  #
 #################################################################################
 
-parse_xml: check_poetry
+parse-xml: check-poetry
 	dvc repro genetics_to_yaml_file

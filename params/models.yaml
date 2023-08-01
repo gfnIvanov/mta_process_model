@@ -2,3 +2,15 @@ gpt_native:
   large: sberbank-ai/rugpt3large_based_on_gpt2
   medium: sberbank-ai/rugpt3medium_based_on_gpt2
   small: sberbank-ai/rugpt3small_based_on_gpt2
+
+depers:
+  sber:
+    name: viktoroo/sberbank-rubert-base-collection3
+    tags:
+    - B-PER
+    - I-PER
+  labse:
+    name: surdan/LaBSE_ner_nerel
+    tags:
+    - B-PERSON
+    - I-PERSON

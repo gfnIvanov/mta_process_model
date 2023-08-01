@@ -2,3 +2,4 @@ paths:
   genetics:
     raw: data/raw/genetics
     int: data/interim/genetics
+    res: data/processed/genetics

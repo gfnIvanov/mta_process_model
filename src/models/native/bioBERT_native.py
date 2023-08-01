@@ -10,7 +10,9 @@ def use_bert_native(text: str) -> None:
     try:
         tokenizer = AutoTokenizer.from_pretrained("alexyalunin/RuBioRoBERTa")
         text_with_mask = text + tokenizer.mask_token + "."
-        model = AutoModelForMaskedLM.from_pretrained("alexyalunin/RuBioRoBERTa")
+        model = AutoModelForMaskedLM.from_pretrained("alexyalunin/RuBioRoBERTa").to(
+            DEVICE
+        )
         input_ids = tokenizer.encode(text_with_mask, return_tensors="pt").to(DEVICE)
         with torch.no_grad():
             logits = model(input_ids).logits

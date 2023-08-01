@@ -5,7 +5,8 @@
 #################################################################################
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-CMD = poetry run
+RUN = poetry run
+REPRO = dvc repro
 
 ifeq (,$(shell which poetry))
 	HAS_POETRY=False
@@ -37,7 +38,7 @@ lint:
 
 # Check types
 check-types:
-	$(CMD) mypy .
+	$(RUN) mypy .
 
 ## Pre-commit all files
 prec-all:
@@ -50,17 +51,17 @@ prec-all:
 
 # use native models (without additional training)
 
-# example: make use_gpt_native size="medium" text="пациент жалуется на повышенную"
+# example: make use-gpt-native size="medium" text="пациент жалуется на повышенную"
 use-gpt-native: check-poetry
 ifeq (,$(size))
-	$(CMD) use_gpt_native "$(text)"
+	$(RUN) use_gpt_native "$(text)"
 else
-	$(CMD) use_gpt_native "--size=$(size)" "$(text)"
+	$(RUN) use_gpt_native "--size=$(size)" "$(text)"
 endif
 
-# example: make use_bert_native text="пациент жалуется на повышенную"
-use-bert-native: check_poetry
-	$(CMD) use_bert_native "$(text)"
+# example: make use-bert-native text="пациент жалуется на повышенную"
+use-bert-native: check-poetry
+	$(RUN) use_bert_native "$(text)"
 
 
 #################################################################################
@@ -68,4 +69,22 @@ use-bert-native: check_poetry
 #################################################################################
 
 parse-xml: check-poetry
-	dvc repro genetics_to_yaml_file
+	$(REPRO) -f -s genetics_to_yaml_file
+
+depers: check-poetry
+	$(REPRO) -f -s depers_genetics
+
+del-dep-file:
+	$(shell if [ -f "$(path)" ] ; then rm $(path); fi)
+
+#################################################################################
+# LOGS                                                                          #
+#################################################################################
+
+# show data logs: make data-logs str=50
+data-logs:
+ifeq (,$(str))
+	tail $(PROJECT_DIR)/logs/data_logs.log
+else
+	tail -n $(str) $(PROJECT_DIR)/logs/data_logs.log
+endif

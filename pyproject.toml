@@ -38,3 +38,4 @@ ignore_missing_imports = true
 use_gpt_native = "src.models.native.ruGPT_native:use_gpt_native"
 use_bert_native = "src.models.native.bioBERT_native:use_bert_native"
 parse_xml = "src.data.process:parse_xml"
+depers = "src.data.process:depersonalization"

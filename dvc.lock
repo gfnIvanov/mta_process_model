@@ -1,7 +1,10 @@
 schema: '2.0'
 stages:
   genetics_to_yaml_file:
-    cmd: poetry run parse_xml --type=genetics 10
+    cmd:
+    - make del-dep-file path=data/interim/genetics/deleted_data.yaml
+    - make del-dep-file path=data/processed/genetics/data.yaml
+    - poetry run parse_xml --type=genetics 10
     deps:
     - path: data/raw/genetics
       hash: md5
@@ -10,27 +13,73 @@ stages:
       nfiles: 21404
     - path: src/data/process.py
       hash: md5
-      md5: d99c428ef93ada729bf210f018f58647
-      size: 1180
+      md5: 18944b61a2f20a55881233aa7d9d8917
+      size: 2820
     - path: src/data/utils/_parse_xml.py
       hash: md5
-      md5: 17a4ab1c4bcd4be98c045c0a46889e63
-      size: 2161
-    - path: src/data/utils/base.py
+      md5: 42789ac51f2df2ef91c98736c0ae6b33
+      size: 2237
+    - path: src/data/utils/general.py
       hash: md5
-      md5: 4ae8d19cff1f8b2e5b6c3b286980169a
-      size: 332
+      md5: 857ae6b4720a2c4c0206314e11b1bcf6
+      size: 1937
     - path: src/data/utils/types.py
       hash: md5
-      md5: 8079609a003a226bf631f058f9e7150e
-      size: 685
+      md5: 9d799b16acf1ab4e8aa3a2fe97e4530d
+      size: 604
     params:
       params/data.yaml:
         paths.genetics:
           raw: data/raw/genetics
           int: data/interim/genetics
+          res: data/processed/genetics
     outs:
     - path: data/interim/genetics/data.yaml
       hash: md5
-      md5: c8848b49aedb1d07f80ec0f7f4ac7a80
-      size: 35531
+      md5: dca795021a057e172baee8bc55ee9f75
+      size: 41330
+  depers_genetics:
+    cmd:
+    - make del-dep-file path=data/interim/genetics/deleted_data.yaml
+    - make del-dep-file path=data/processed/genetics/data.yaml
+    - poetry run depers --type=genetics --model=labse
+    deps:
+    - path: data/interim/genetics/data.yaml
+      hash: md5
+      md5: dca795021a057e172baee8bc55ee9f75
+      size: 41330
+    - path: src/data/process.py
+      hash: md5
+      md5: 18944b61a2f20a55881233aa7d9d8917
+      size: 2820
+    - path: src/data/utils/_depersonalization.py
+      hash: md5
+      md5: 29e2c9ab0b9cd7ac1aed14e03958f2eb
+      size: 3297
+    params:
+      params/data.yaml:
+        paths.genetics:
+          raw: data/raw/genetics
+          int: data/interim/genetics
+          res: data/processed/genetics
+      params/models.yaml:
+        depers:
+          sber:
+            name: viktoroo/sberbank-rubert-base-collection3
+            tags:
+            - B-PER
+            - I-PER
+          labse:
+            name: surdan/LaBSE_ner_nerel
+            tags:
+            - B-PERSON
+            - I-PERSON
+    outs:
+    - path: data/interim/genetics/deleted_data.yaml
+      hash: md5
+      md5: 8528388e0ebe34dd8e6449075f8f45f0
+      size: 1224
+    - path: data/processed/genetics/data.yaml
+      hash: md5
+      md5: b3a42a1180a4d45c9aa4df662848b266
+      size: 34977

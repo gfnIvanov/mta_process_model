@@ -1,6 +1,9 @@
 stages:
   genetics_to_yaml_file:
-    cmd: poetry run parse_xml --type=genetics 10
+    cmd:
+    - make del-dep-file path=data/interim/genetics/deleted_data.yaml
+    - make del-dep-file path=data/processed/genetics/data.yaml
+    - poetry run parse_xml --type=genetics 10
     params:
     - params/data.yaml:
       - paths.genetics
@@ -8,7 +11,25 @@ stages:
     - data/raw/genetics
     - src/data/process.py
     - src/data/utils/_parse_xml.py
-    - src/data/utils/base.py
+    - src/data/utils/general.py
     - src/data/utils/types.py
     outs:
     - data/interim/genetics/data.yaml
+
+  depers_genetics:
+    cmd:
+    - make del-dep-file path=data/interim/genetics/deleted_data.yaml
+    - make del-dep-file path=data/processed/genetics/data.yaml
+    - poetry run depers --type=genetics --model=labse
+    params:
+    - params/data.yaml:
+      - paths.genetics
+    - params/models.yaml:
+      - depers
+    deps:
+    - data/interim/genetics/data.yaml
+    - src/data/process.py
+    - src/data/utils/_depersonalization.py
+    outs:
+    - data/interim/genetics/deleted_data.yaml
+    - data/processed/genetics/data.yaml

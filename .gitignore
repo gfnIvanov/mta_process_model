@@ -21,7 +21,7 @@ eggs/
 
 # Datasets
 data/interim/genetics/*
-data/processed/*
+data/processed/genetics/*
 data/raw/*
 
 # Log files

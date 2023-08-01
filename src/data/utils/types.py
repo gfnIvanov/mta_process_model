@@ -1,12 +1,10 @@
 from dataclasses import dataclass, field
-from typing import Literal, Union, Optional
+from typing import Union, Optional
 
 
 opt_str = Union[str, None]
 
 str_dict = dict[str, str]
-
-fio_fields = dict[Literal["firstname", "surname", "lastname"], opt_str]
 
 
 @dataclass

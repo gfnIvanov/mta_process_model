@@ -18,6 +18,8 @@ click = "^8.1.4"
 dvc = "^3.5.1"
 mypy = "^1.4.1"
 types-click = "^7.1.8"
+tqdm = "^4.65.0"
+pandas = "^2.0.3"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -39,3 +41,5 @@ use_gpt_native = "src.models.native.ruGPT_native:use_gpt_native"
 use_bert_native = "src.models.native.bioBERT_native:use_bert_native"
 parse_xml = "src.data.process:parse_xml"
 depers = "src.data.process:depersonalization"
+prepare_dataset = "src.data.process:prepare_dataset"
+train = "src.models.train.process:train"

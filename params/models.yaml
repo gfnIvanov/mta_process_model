@@ -1,7 +1,9 @@
-gpt_native:
-  large: sberbank-ai/rugpt3large_based_on_gpt2
-  medium: sberbank-ai/rugpt3medium_based_on_gpt2
-  small: sberbank-ai/rugpt3small_based_on_gpt2
+for_train:
+  bert: alexyalunin/RuBioRoBERTa
+  gpt:
+    large: sberbank-ai/rugpt3large_based_on_gpt2
+    medium: sberbank-ai/rugpt3medium_based_on_gpt2
+    small: sberbank-ai/rugpt3small_based_on_gpt2
 
 depers:
   sber:
@@ -14,3 +16,6 @@ depers:
     tags:
     - B-PERSON
     - I-PERSON
+
+path_to_train:
+  res: models/processed

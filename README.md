@@ -1,1 +1,1 @@
-### Thesis project on symptom recognition in medical texts
+### Medical Text Autocomplete

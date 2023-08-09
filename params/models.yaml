@@ -17,5 +17,4 @@ depers:
     - B-PERSON
     - I-PERSON
 
-path_to_train:
-  res: models/processed
+path_to_trained: models/processed

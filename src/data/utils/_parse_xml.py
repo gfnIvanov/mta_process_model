@@ -30,21 +30,26 @@ def _parse_xml(
             ET.Element,
             root.find(".//hl7:legalAuthenticator//hl7:assignedPerson/hl7:name", ns),
         )
+
         if authentif is not None and not fio_comparsion(data.file.author, authentif):
             data.file.authentif = FioFields()
             data.file.authentif.lastname = authentif[0].text
             data.file.authentif.firstname = authentif[1].text
             data.file.authentif.surname = authentif[2].text
+
         docof = cast(
             ET.Element,
             root.find(".//hl7:documentationOf//hl7:assignedPerson/hl7:name", ns),
         )
+
         if docof is not None and not fio_comparsion(data.file.author, docof):
             data.file.docof = FioFields()
             data.file.docof.lastname = docof[0].text
             data.file.docof.firstname = docof[1].text
             data.file.docof.surname = docof[2].text
+
         obs_fields = root.findall(".//hl7:observation", ns)
+
         for obs in obs_fields:
             if obs[0].attrib["code"] in ["805", "806", "1805", "1806"]:
                 data.file.text = (
@@ -52,4 +57,5 @@ def _parse_xml(
                     + "\n"
                     + cast(str, cast(ET.Element, obs.find("hl7:value", ns)).text)
                 )
+
         yield data

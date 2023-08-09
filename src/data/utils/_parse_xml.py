@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+from tqdm import tqdm
 from pathlib import Path
 from typing import cast, Iterator
 from .general import fio_comparsion
@@ -10,7 +11,7 @@ def _parse_xml(
     ns: str_dict,
     raw_path: Path,
 ) -> Iterator[InterimData]:
-    for file in files_list:
+    for file in tqdm(files_list, ncols=100, desc="Parse XML"):
         data = InterimData()
         data.file.code = Path(file).stem
         tree = ET.parse(raw_path.joinpath(file))

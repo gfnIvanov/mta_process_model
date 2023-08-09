@@ -1,7 +1,8 @@
 import torch
+from tqdm import tqdm
 from typing import Iterator
 from pathlib import Path
-from .types import InterimData
+from .types import InterimData, ProcessedData, ProcessedFileFields
 from .general import get_sentences, clean_with_regexp, save_yaml_file
 from transformers import PreTrainedTokenizer, PreTrainedModel
 
@@ -11,11 +12,11 @@ def _depersonalization(
     ner_model: PreTrainedModel,
     model_tags: list[str],
     int_files: Iterator[InterimData],
+    filescount: int,
     int_path: Path,
-    res_path: Path,
     DEVICE: torch.device,
-) -> None:
-    for data in int_files:
+) -> Iterator[ProcessedData]:
+    for data in tqdm(int_files, total=filescount, ncols=100, desc="Depersonalization"):
         if data.file.text is None:
             continue
 
@@ -23,6 +24,8 @@ def _depersonalization(
         pers_data: list[str] = []
         for_regexp = []
         deleted_data: list[str] = []
+        res_object = ProcessedData()
+        res_object_fields = ProcessedFileFields()
 
         if data.file.authentif is not None:
             for_regexp.extend(
@@ -55,7 +58,7 @@ def _depersonalization(
             ]
         )
 
-        for sent in get_sentences(data.file.text):
+        for sent in get_sentences(data.file.text, 512):
             local_sent, del_data = clean_with_regexp(for_regexp, sent)
 
             if len(result_text) == 0:
@@ -87,7 +90,7 @@ def _depersonalization(
 
         from_model_with_empty = ("").join(pers_data).split(" ")
 
-        from_model = list(filter(lambda x: len(x) > 1, from_model_with_empty))
+        from_model = list(filter(lambda x: len(x) > 2, from_model_with_empty))
 
         result_text, del_data = clean_with_regexp(from_model, result_text)
 
@@ -95,8 +98,12 @@ def _depersonalization(
 
         del_data_object = {"file": {"code": data.file.code, "deleted": deleted_data}}
 
-        res_object = {"file": {"code": data.file.code, "text": result_text}}
+        res_object_fields.code = data.file.code
+
+        res_object_fields.text = result_text
+
+        res_object.file = res_object_fields
 
         save_yaml_file(del_data_object, int_path, "deleted_data.yaml")
 
-        save_yaml_file(res_object, res_path, "data.yaml")
+        yield res_object

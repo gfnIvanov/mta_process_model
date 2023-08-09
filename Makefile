@@ -63,6 +63,9 @@ endif
 use-bert-native: check-poetry
 	$(RUN) use_bert_native "$(text)"
 
+train: check-poetry
+	$(REPRO) -f -s train_models
+
 
 #################################################################################
 # PREPARE DATA                                                                  #
@@ -73,6 +76,9 @@ parse-xml: check-poetry
 
 depers: check-poetry
 	$(REPRO) -f -s depers_genetics
+
+prep-ds: check-poetry
+	$(REPRO) -f -s prepare_dataset
 
 del-dep-file:
 	$(shell if [ -f "$(path)" ] ; then rm $(path); fi)

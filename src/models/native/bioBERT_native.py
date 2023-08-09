@@ -1,6 +1,6 @@
 import torch
 import click
-from . import DEVICE
+from . import DEVICE, models_conf
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 
 
@@ -8,11 +8,11 @@ from transformers import AutoTokenizer, AutoModelForMaskedLM
 @click.argument("text")
 def use_bert_native(text: str) -> None:
     try:
-        tokenizer = AutoTokenizer.from_pretrained("alexyalunin/RuBioRoBERTa")
+        tokenizer = AutoTokenizer.from_pretrained(models_conf["for_train"]["bert"])
         text_with_mask = text + tokenizer.mask_token + "."
-        model = AutoModelForMaskedLM.from_pretrained("alexyalunin/RuBioRoBERTa").to(
-            DEVICE
-        )
+        model = AutoModelForMaskedLM.from_pretrained(
+            models_conf["for_train"]["bert"]
+        ).to(DEVICE)
         input_ids = tokenizer.encode(text_with_mask, return_tensors="pt").to(DEVICE)
         with torch.no_grad():
             logits = model(input_ids).logits

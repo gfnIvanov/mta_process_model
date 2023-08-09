@@ -27,3 +27,14 @@ class FileFields:
 @dataclass
 class InterimData:
     file: FileFields = field(default_factory=FileFields)
+
+
+@dataclass
+class ProcessedFileFields:
+    code: opt_str = ""
+    text: str = ""
+
+
+@dataclass
+class ProcessedData:
+    file: ProcessedFileFields = field(default_factory=ProcessedFileFields)

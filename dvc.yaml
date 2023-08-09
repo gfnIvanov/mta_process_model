@@ -1,9 +1,17 @@
+vars:
+  - datatype: genetics
+  - to_yaml:
+      index: 100
+  - depers:
+      model: labse
+
 stages:
   genetics_to_yaml_file:
     cmd:
     - make del-dep-file path=data/interim/genetics/deleted_data.yaml
     - make del-dep-file path=data/processed/genetics/data.yaml
-    - poetry run parse_xml --type=genetics 10
+    - make del-dep-file path=data/processed/genetics/data.csv
+    - poetry run parse_xml --datatype=${datatype} ${to_yaml.index}
     params:
     - params/data.yaml:
       - paths.genetics
@@ -12,7 +20,6 @@ stages:
     - src/data/process.py
     - src/data/utils/_parse_xml.py
     - src/data/utils/general.py
-    - src/data/utils/types.py
     outs:
     - data/interim/genetics/data.yaml
 
@@ -20,7 +27,8 @@ stages:
     cmd:
     - make del-dep-file path=data/interim/genetics/deleted_data.yaml
     - make del-dep-file path=data/processed/genetics/data.yaml
-    - poetry run depers --type=genetics --model=labse
+    - make del-dep-file path=data/processed/genetics/data.csv
+    - poetry run depers --datatype=${datatype} --model=${depers.model}
     params:
     - params/data.yaml:
       - paths.genetics
@@ -30,6 +38,34 @@ stages:
     - data/interim/genetics/data.yaml
     - src/data/process.py
     - src/data/utils/_depersonalization.py
+    - src/data/utils/general.py
     outs:
     - data/interim/genetics/deleted_data.yaml
     - data/processed/genetics/data.yaml
+
+  prepare_dataset:
+    cmd:
+    - make del-dep-file path=data/processed/genetics/data.csv
+    - poetry run prepare_dataset --datatype=${datatype}
+    params:
+    - params/data.yaml:
+      - paths.genetics
+    - params/models.yaml:
+      - depers
+      - for_train
+    deps:
+    - data/processed/genetics/data.yaml
+    - src/data/process.py
+    - src/data/utils/_prepare_dataset.py
+    - src/data/utils/general.py
+    outs:
+    - data/processed/genetics/data.csv
+
+  train_models:
+    cmd:
+    - poetry run train --datatype=${datatype} --model=bert
+    params:
+    - params/data.yaml:
+      - paths.genetics
+    - params/models.yaml:
+      - for_train

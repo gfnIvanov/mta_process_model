@@ -4,7 +4,7 @@ stages:
     cmd:
     - make del-dep-file path=data/interim/genetics/deleted_data.yaml
     - make del-dep-file path=data/processed/genetics/data.yaml
-    - poetry run parse_xml --type=genetics 10
+    - poetry run parse_xml --datatype=genetics 100
     deps:
     - path: data/raw/genetics
       hash: md5
@@ -13,20 +13,20 @@ stages:
       nfiles: 21404
     - path: src/data/process.py
       hash: md5
-      md5: 18944b61a2f20a55881233aa7d9d8917
-      size: 2820
+      md5: 394b97085835f6b568bde0d7be44a506
+      size: 4664
     - path: src/data/utils/_parse_xml.py
       hash: md5
-      md5: 42789ac51f2df2ef91c98736c0ae6b33
-      size: 2237
+      md5: ab78ab807e87155576ee969b3050d785
+      size: 2294
     - path: src/data/utils/general.py
       hash: md5
-      md5: 857ae6b4720a2c4c0206314e11b1bcf6
-      size: 1937
+      md5: 8439a1485298c0675691d36c229aef3a
+      size: 2455
     - path: src/data/utils/types.py
       hash: md5
-      md5: 9d799b16acf1ab4e8aa3a2fe97e4530d
-      size: 604
+      md5: 0810644b317eabb52cc05d65bfdf4bee
+      size: 799
     params:
       params/data.yaml:
         paths.genetics:
@@ -36,26 +36,26 @@ stages:
     outs:
     - path: data/interim/genetics/data.yaml
       hash: md5
-      md5: dca795021a057e172baee8bc55ee9f75
-      size: 41330
+      md5: 94d02e23558430b3526f7d06552c0e58
+      size: 491770
   depers_genetics:
     cmd:
     - make del-dep-file path=data/interim/genetics/deleted_data.yaml
     - make del-dep-file path=data/processed/genetics/data.yaml
-    - poetry run depers --type=genetics --model=labse
+    - poetry run depers --datatype=genetics --model=labse
     deps:
     - path: data/interim/genetics/data.yaml
       hash: md5
-      md5: dca795021a057e172baee8bc55ee9f75
-      size: 41330
+      md5: 94d02e23558430b3526f7d06552c0e58
+      size: 491770
     - path: src/data/process.py
       hash: md5
-      md5: 18944b61a2f20a55881233aa7d9d8917
-      size: 2820
+      md5: 018d0457a1bd5dca93149e2acefa6b58
+      size: 4638
     - path: src/data/utils/_depersonalization.py
       hash: md5
-      md5: 29e2c9ab0b9cd7ac1aed14e03958f2eb
-      size: 3297
+      md5: f5fa6cd06458a62e71b013505dfe554c
+      size: 3538
     params:
       params/data.yaml:
         paths.genetics:
@@ -77,9 +77,75 @@ stages:
     outs:
     - path: data/interim/genetics/deleted_data.yaml
       hash: md5
-      md5: 8528388e0ebe34dd8e6449075f8f45f0
-      size: 1224
+      md5: d829dbcba736db1972477b29d8d54656
+      size: 13461
     - path: data/processed/genetics/data.yaml
       hash: md5
-      md5: b3a42a1180a4d45c9aa4df662848b266
-      size: 34977
+      md5: f5b44c93fcec3db751551f108cc665cf
+      size: 427242
+  train_models:
+    cmd:
+    - poetry run train --datatype=genetics --model=bert
+    params:
+      params/data.yaml:
+        paths.genetics:
+          raw: data/raw/genetics
+          int: data/interim/genetics
+          res: data/processed/genetics
+      params/models.yaml:
+        for_train:
+          bert: alexyalunin/RuBioRoBERTa
+          gpt:
+            large: sberbank-ai/rugpt3large_based_on_gpt2
+            medium: sberbank-ai/rugpt3medium_based_on_gpt2
+            small: sberbank-ai/rugpt3small_based_on_gpt2
+  prepare_dataset:
+    cmd:
+    - make del-dep-file path=data/processed/genetics/data.csv
+    - poetry run prepare_dataset --datatype=genetics
+    deps:
+    - path: data/processed/genetics/data.yaml
+      hash: md5
+      md5: f5b44c93fcec3db751551f108cc665cf
+      size: 427242
+    - path: src/data/process.py
+      hash: md5
+      md5: 1f571f104909fe5389d15c5d910041fa
+      size: 4147
+    - path: src/data/utils/_prepare_dataset.py
+      hash: md5
+      md5: 25d8c78fe22358463ed9d5c4338cbe5a
+      size: 638
+    - path: src/data/utils/general.py
+      hash: md5
+      md5: 8439a1485298c0675691d36c229aef3a
+      size: 2455
+    params:
+      params/data.yaml:
+        paths.genetics:
+          raw: data/raw/genetics
+          int: data/interim/genetics
+          res: data/processed/genetics
+      params/models.yaml:
+        depers:
+          sber:
+            name: viktoroo/sberbank-rubert-base-collection3
+            tags:
+            - B-PER
+            - I-PER
+          labse:
+            name: surdan/LaBSE_ner_nerel
+            tags:
+            - B-PERSON
+            - I-PERSON
+        for_train:
+          bert: alexyalunin/RuBioRoBERTa
+          gpt:
+            large: sberbank-ai/rugpt3large_based_on_gpt2
+            medium: sberbank-ai/rugpt3medium_based_on_gpt2
+            small: sberbank-ai/rugpt3small_based_on_gpt2
+    outs:
+    - path: data/processed/genetics/data.csv
+      hash: md5
+      md5: c1f560fa62b70ed76e7d7ff716250276
+      size: 402406

@@ -6,12 +6,6 @@ import yaml
 import logging
 import dvc.api
 from typing import Union, Iterator, cast
-from transformers import (
-    AutoTokenizer,
-    AutoModelForTokenClassification,
-    PreTrainedTokenizer,
-    PreTrainedModel,
-)
 from . import root_dir, DEVICE
 from .utils.general import save_yaml_file, count_files_in_yaml
 from .utils._parse_xml import _parse_xml
@@ -64,18 +58,9 @@ def depersonalization(datatype: str, model: str) -> None:
             int_files = cast(
                 Iterator[InterimData], yaml.load_all(file, Loader=yaml.Loader)
             )
-            tokenizer = cast(
-                PreTrainedTokenizer,
-                AutoTokenizer.from_pretrained(model_name),
-            )
-            ner_model = cast(
-                PreTrainedModel,
-                AutoModelForTokenClassification.from_pretrained(model_name).to(DEVICE),
-            )
 
             res_data = _depersonalization(
-                tokenizer,
-                ner_model,
+                model_name,
                 model_tags,
                 int_files,
                 filescount,
@@ -95,9 +80,7 @@ def depersonalization(datatype: str, model: str) -> None:
 
 @click.command()
 @click.option("--datatype", type=click.Choice(["genetics"]))
-@click.option("--model", type=click.Choice(["gpt", "bert", "sber", "labse"]))
-@click.option("--size", type=click.Choice(["large", "medium", "small"]), default=None)
-def prepare_dataset(datatype: str, model: str, size: Union[str, None] = None) -> None:
+def prepare_dataset(datatype: str) -> None:
     try:
         logger = logging.getLogger("Function: prepare_dataset")
         data_path = root_dir.joinpath(dvc_params["paths"][datatype]["res"])

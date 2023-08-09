@@ -1,21 +1,26 @@
 import torch
 from tqdm import tqdm
-from typing import Iterator
+from typing import Iterator, cast
 from pathlib import Path
 from .types import InterimData, ProcessedData, ProcessedFileFields
 from .general import get_sentences, clean_with_regexp, save_yaml_file
-from transformers import PreTrainedTokenizer, PreTrainedModel
+from transformers import AutoTokenizer, PreTrainedModel, AutoModelForTokenClassification
 
 
 def _depersonalization(
-    tokenizer: PreTrainedTokenizer,
-    ner_model: PreTrainedModel,
+    model_name: str,
     model_tags: list[str],
     int_files: Iterator[InterimData],
     filescount: int,
     int_path: Path,
-    DEVICE: torch.device,
+    device: torch.device,
 ) -> Iterator[ProcessedData]:
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    ner_model = cast(
+        PreTrainedModel,
+        AutoModelForTokenClassification.from_pretrained(model_name).to(device),
+    )
+
     for data in tqdm(int_files, total=filescount, ncols=100, desc="Depersonalization"):
         if data.file.text is None:
             continue
@@ -70,7 +75,7 @@ def _depersonalization(
 
             inputs = tokenizer(
                 local_sent, add_special_tokens=False, return_tensors="pt"
-            ).to(DEVICE)
+            ).to(device)
             with torch.no_grad():
                 logits = ner_model(**inputs).logits
 
@@ -99,9 +104,7 @@ def _depersonalization(
         del_data_object = {"file": {"code": data.file.code, "deleted": deleted_data}}
 
         res_object_fields.code = data.file.code
-
         res_object_fields.text = result_text
-
         res_object.file = res_object_fields
 
         save_yaml_file(del_data_object, int_path, "deleted_data.yaml")

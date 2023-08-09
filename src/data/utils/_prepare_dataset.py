@@ -11,13 +11,10 @@ def _prepare_dataset(proc_files: Iterator[ProcessedData], res_path: Path) -> Non
 
     def flatten(data: list[list[str]]) -> list[str]:
         result = []
-
         for arr in data:
             for sent in arr:
                 result.append(sent)
-
         return result
 
     df = pd.DataFrame({"text": flatten(list(map(join_data, proc_files)))})
-
     df.to_csv(res_path.joinpath("data.csv"), index=False)

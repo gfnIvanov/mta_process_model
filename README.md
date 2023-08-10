@@ -1,19 +1,31 @@
 ### Medical Text Autocomplete
 
-#### В текущем репозитории:
+#### In the current repository:
 
- - Выполняется подготовка данных для обучения модели
+ - Data is being prepared for model training
 
- - Выполняется обучение модели
+ - The model is being trained
 
-#### В рамках этапа подготовки данных:
+#### As part of the data preparation phase:
 
-Из xml-структуры документа выделяются необходимые текстовые данные (для дальнейшего обучения модели и сопоставления при деперсонализации)
+The necessary text data is extracted from the xml-structure of the document (for further model training and comparison during depersonalization)
 
-Полученные данные деперсонифицируются с использованием NLP-моделей и регулярных выражений
+The received data is depersonalized using NER-models and regular expressions
 
-Из деперсонифицированных данных формируется датасет для обучения
+Dataset for training is formed from depersonalized data
 
-#### В рамках этапа обучения модели:
+There are two models available for depersonalization:
 
-Модель дообучается на подготовленных данных с использованием ресурсов локального компьютера, либо на ресурсах Yandex Datasphere
+ - [surdan/LaBSE_ner_nerel](https://huggingface.co/surdan/LaBSE_ner_nerel)
+ - [viktoroo/sberbank-rubert-base-collection3 ](https://huggingface.co/viktoroo/sberbank-rubert-base-collection3)
+
+#### As part of the model retraining stage:
+
+The model is retrained on the prepared data using the resources of the local computer, or on the resources of Yandex Datasphere
+
+There are two models available for model retraining:
+
+ - [ai-forever/rugpt3large_based_on_gpt2](https://huggingface.co/ai-forever/rugpt3large_based_on_gpt2)
+ - [alexyalunin/RuBioRoBERTa](https://huggingface.co/alexyalunin/RuBioRoBERTa)
+
+These models can also be used in their original form without additional training.

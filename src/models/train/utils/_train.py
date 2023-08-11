@@ -45,7 +45,6 @@ def _train(
         per_device_eval_batch_size=6,
         num_train_epochs=5,
         report_to="none",
-        use_mps_device=True,
     )
 
     trainer = Trainer(

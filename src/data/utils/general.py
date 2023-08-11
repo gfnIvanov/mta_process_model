@@ -8,6 +8,13 @@ from .types import FioFields, opt_str
 
 
 def fio_comparsion(author: FioFields, other: Element) -> bool:
+    """
+    Full name match check
+
+    Arguments:
+    author: FioFields - author full name
+    other: Element - fields that are checked for a match
+    """
     if (
         author.lastname != other[0].text
         or author.firstname != other[1].text
@@ -19,6 +26,14 @@ def fio_comparsion(author: FioFields, other: Element) -> bool:
 
 
 def get_sentences(text: str, sent_len: int, simple: bool = False) -> list[str]:
+    """
+    Dividing text into sentences
+
+    Arguments:
+    text: str - text
+    sent_len: int - sentence length
+    simple: bool = False - if True then do not clean up the text
+    """
     text_arr = text.split(" ")
     sent = ""
     sentences = []
@@ -51,6 +66,13 @@ def get_sentences(text: str, sent_len: int, simple: bool = False) -> list[str]:
 def clean_with_regexp(
     for_regexp: Union[list[str], list[opt_str]], text: str
 ) -> tuple[str, list[str]]:
+    """
+    Finding and removing personal data from offers using regexp
+
+    Arguments:
+    for_regexp: Union[list[str], list[opt_str]] - list of expressions to match
+    text: str - text
+    """
     local_text = text
     deleted_data = []
 
@@ -68,6 +90,15 @@ def clean_with_regexp(
 def save_yaml_file(
     data: Any, path: Path, file_name: str, dump_all: bool = False
 ) -> None:
+    """
+    Saving the yaml-file to a local directory
+
+    Arguments:
+    data: Any - object to store
+    path: Path - path to local directory
+    file_name: str - file name
+    dump_all: bool = False - if True then save multiple files into one
+    """
     with open(os.path.join(path, file_name), "a") as new_file:
         if dump_all:
             yaml.dump_all(data, new_file, encoding="utf-8", allow_unicode=True)
@@ -76,6 +107,12 @@ def save_yaml_file(
 
 
 def count_files_in_yaml(file_path: Path) -> int:
+    """
+    Counting files in yaml file
+
+    Arguments:
+    file_path: Path - path to yaml-file
+    """
     filescount = 0
 
     with open(file_path, "r") as file:

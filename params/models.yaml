@@ -1,3 +1,5 @@
+# configuration of used models
+
 for_train:
   bert: alexyalunin/RuBioRoBERTa
   gpt:

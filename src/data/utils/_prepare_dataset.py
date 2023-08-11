@@ -6,6 +6,16 @@ from .general import get_sentences
 
 
 def _prepare_dataset(proc_files: Iterator[ProcessedData], res_path: Path) -> None:
+    """
+    Dataset preparation function
+
+    Convert from yaml to csv
+
+    Arguments:
+    proc_files: Iterator[ProcessedData] - files from processed yaml-file
+    res_path: Path - path to res data
+    """
+
     def join_data(data: ProcessedData) -> list[str]:
         return get_sentences(data.file.text, 128)
 

@@ -7,6 +7,12 @@ from transformers import AutoTokenizer, AutoModelForMaskedLM
 @click.command()
 @click.argument("text")
 def use_bert_native(text: str) -> None:
+    """
+    Function to test the native bert model
+
+    Arguments:
+    text: str - input text
+    """
     try:
         tokenizer = AutoTokenizer.from_pretrained(models_conf["for_train"]["bert"])
         text_with_mask = text + tokenizer.mask_token + "."

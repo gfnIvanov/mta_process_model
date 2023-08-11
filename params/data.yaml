@@ -1,3 +1,5 @@
+# configuration of access paths to raw, intermediate and processed data of various types
+
 paths:
   genetics:
     raw: data/raw/genetics

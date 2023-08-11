@@ -11,6 +11,17 @@ def _parse_xml(
     ns: str_dict,
     raw_path: Path,
 ) -> Iterator[InterimData]:
+    """
+    xml-file parsing function
+
+    Extracts personal data from the xml file, as well as text protocols and browsing
+    Returns an iterable object with selected data to store in a yaml-file
+
+    Arguments:
+    files_list: list[str] - raw xml-files
+    ns: str_dict - xml-namespace
+    raw_path: Path - path to raw data
+    """
     for file in tqdm(files_list, ncols=100, desc="Parse XML"):
         data = InterimData()
         data.file.code = Path(file).stem

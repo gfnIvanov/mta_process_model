@@ -1,2 +1,4 @@
+# log file path configuration
+
 data_log_file: logs/data_logs.log
 models_log_file: logs/models_logs.log

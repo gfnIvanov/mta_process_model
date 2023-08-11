@@ -20,6 +20,15 @@ dvc_params = dvc.api.params_show()
 @click.option("--datatype", type=click.Choice(["genetics"]))
 @click.argument("index", type=int, required=False)
 def parse_xml(datatype: str, index: Union[int, None] = None) -> None:
+    """
+    Wrapper for xml-file parsing function
+
+    Performs variable preparation, calls the parsing function, saves the result
+
+    Arguments:
+    datatype: str - data type
+    index: Union[int, None] = None - limit on the number of processed files
+    """
     try:
         logger = logging.getLogger("Function: parse_xml")
         raw_path = root_dir.joinpath(dvc_params["paths"][datatype]["raw"])
@@ -46,6 +55,16 @@ def parse_xml(datatype: str, index: Union[int, None] = None) -> None:
 @click.option("--datatype", type=click.Choice(["genetics"]))
 @click.option("--model", type=click.Choice(["sber", "labse"]))
 def depersonalization(datatype: str, model: str) -> None:
+    """
+    Wrapper for data depersonalization function
+
+    Performs variable preparation, loads raw data from a file,
+    calls the depersonalization function, saves the result
+
+    Arguments:
+    datatype: str - data type
+    model: str - model used to solve the NER-task
+    """
     try:
         logger = logging.getLogger("Function: depersonalization")
         int_path = root_dir.joinpath(dvc_params["paths"][datatype]["int"])
@@ -81,6 +100,15 @@ def depersonalization(datatype: str, model: str) -> None:
 @click.command()
 @click.option("--datatype", type=click.Choice(["genetics"]))
 def prepare_dataset(datatype: str) -> None:
+    """
+    Wrapper for dataset preparation function
+
+    Performs variable preparation, loads raw data from a file,
+    calls the dataset preparation function
+
+    Arguments:
+    datatype: str - data type
+    """
     try:
         logger = logging.getLogger("Function: prepare_dataset")
         data_path = root_dir.joinpath(dvc_params["paths"][datatype]["res"])

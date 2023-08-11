@@ -7,6 +7,13 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 @click.option("--size", default="small")
 @click.argument("text")
 def use_gpt_native(size: str, text: str) -> None:
+    """
+    Function to test the native gtp model
+
+    Arguments:
+    size: str - model size
+    text: str - input text
+    """
     try:
         if size not in list(models_conf["for_train"]["gpt"].keys()):
             raise Warning("Use these sizes: [large, medium, small]")

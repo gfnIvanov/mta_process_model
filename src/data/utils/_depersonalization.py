@@ -15,6 +15,20 @@ def _depersonalization(
     int_path: Path,
     device: torch.device,
 ) -> Iterator[ProcessedData]:
+    """
+    Data depersonalization function
+
+    Performs data depersonalization using regular expressions and NER-model
+    Returns an iterable object with depersonalized data to be saved to a yaml-file
+
+    Arguments:
+    model_name: str - model name
+    model_tags: list[str] - pers data tags in the model
+    int_files: Iterator[InterimData] - files from raw yaml-file
+    filescount: int - files quant in yaml-file
+    int_path: Path - path to interim data
+    device: torch.device - cuda or cpu
+    """
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     ner_model = cast(
         PreTrainedModel,

@@ -4,6 +4,8 @@ vars:
       index: 100
   - depers:
       model: labse
+  - prep_ds:
+      to_s3: true
 
 stages:
   genetics_to_yaml_file:
@@ -46,10 +48,11 @@ stages:
   prepare_dataset:
     cmd:
     - make del-dep-file path=data/processed/genetics/data.csv
-    - poetry run prepare_dataset --datatype=${datatype}
+    - poetry run prepare_dataset --datatype=${datatype} --to_s3=${prep_ds.to_s3}
     params:
     - params/data.yaml:
       - paths.genetics
+      - s3_storage
     - params/models.yaml:
       - depers
       - for_train

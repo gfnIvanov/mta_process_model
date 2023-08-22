@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+.mypy_cache
 
 # Distribution / packaging
 dist/
@@ -21,7 +22,7 @@ eggs/
 
 # Datasets
 data/interim/genetics/*
-data/processed/genetics/*
+data/processed/*
 data/raw/*
 
 # Log files

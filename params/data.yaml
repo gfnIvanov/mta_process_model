@@ -1,7 +1,11 @@
-# configuration of access paths to raw, intermediate and processed data of various types
+# configuration for processed data
 
 paths:
   genetics:
     raw: data/raw/genetics
     int: data/interim/genetics
     res: data/processed/genetics
+
+s3_storage:
+  url: https://storage.yandexcloud.net
+  bucket: mta-processed-objects

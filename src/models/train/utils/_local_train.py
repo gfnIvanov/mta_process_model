@@ -14,7 +14,7 @@ from transformers import (
 )
 
 
-def _train(
+def _local_train(
     df: DataFrame, model_name: str, res_path: Path, device: torch.device
 ) -> None:
     tokenizer = AutoTokenizer.from_pretrained(model_name)

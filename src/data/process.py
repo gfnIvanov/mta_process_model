@@ -11,6 +11,7 @@ from .utils.general import save_yaml_file, count_files_in_yaml
 from .utils._parse_xml import _parse_xml
 from .utils._depersonalization import _depersonalization
 from .utils._prepare_dataset import _prepare_dataset
+from .utils._to_s3 import _to_s3
 from .utils.types import InterimData, ProcessedData
 
 dvc_params = dvc.api.params_show()
@@ -99,12 +100,14 @@ def depersonalization(datatype: str, model: str) -> None:
 
 @click.command()
 @click.option("--datatype", type=click.Choice(["genetics"]))
-def prepare_dataset(datatype: str) -> None:
+@click.option("--to_s3", type=bool)
+def prepare_dataset(datatype: str, to_s3: bool) -> None:
     """
     Wrapper for dataset preparation function
 
     Performs variable preparation, loads raw data from a file,
     calls the dataset preparation function
+    sends the finished dataset to remote s3-storage
 
     Arguments:
     datatype: str - data type
@@ -119,6 +122,12 @@ def prepare_dataset(datatype: str) -> None:
             )
 
             _prepare_dataset(proc_files, data_path)
+
+            if to_s3:
+                s3_bucket = dvc_params["s3_storage"]["bucket"]
+                s3_url = dvc_params["s3_storage"]["url"]
+
+                _to_s3(data_path, s3_bucket, s3_url)
 
     except Exception as e:
         click.echo(

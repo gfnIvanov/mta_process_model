@@ -4,6 +4,7 @@ stages:
     cmd:
     - make del-dep-file path=data/interim/genetics/deleted_data.yaml
     - make del-dep-file path=data/processed/genetics/data.yaml
+    - make del-dep-file path=data/processed/genetics/data.csv
     - poetry run parse_xml --datatype=genetics 100
     deps:
     - path: data/raw/genetics
@@ -13,20 +14,16 @@ stages:
       nfiles: 21404
     - path: src/data/process.py
       hash: md5
-      md5: 394b97085835f6b568bde0d7be44a506
-      size: 4664
+      md5: 4b5061fc8328d5dad821378426de33d8
+      size: 4235
     - path: src/data/utils/_parse_xml.py
       hash: md5
-      md5: ab78ab807e87155576ee969b3050d785
-      size: 2294
+      md5: 8e023d8005356aff5612cd6446df69cd
+      size: 2635
     - path: src/data/utils/general.py
       hash: md5
-      md5: 8439a1485298c0675691d36c229aef3a
-      size: 2455
-    - path: src/data/utils/types.py
-      hash: md5
-      md5: 0810644b317eabb52cc05d65bfdf4bee
-      size: 799
+      md5: b713fdfff3d219cd4d256236a48a0525
+      size: 3351
     params:
       params/data.yaml:
         paths.genetics:
@@ -36,26 +33,31 @@ stages:
     outs:
     - path: data/interim/genetics/data.yaml
       hash: md5
-      md5: 94d02e23558430b3526f7d06552c0e58
-      size: 491770
+      md5: 195080bd62334e33757758bae47d5418
+      size: 479935
   depers_genetics:
     cmd:
     - make del-dep-file path=data/interim/genetics/deleted_data.yaml
     - make del-dep-file path=data/processed/genetics/data.yaml
+    - make del-dep-file path=data/processed/genetics/data.csv
     - poetry run depers --datatype=genetics --model=labse
     deps:
     - path: data/interim/genetics/data.yaml
       hash: md5
-      md5: 94d02e23558430b3526f7d06552c0e58
-      size: 491770
+      md5: 195080bd62334e33757758bae47d5418
+      size: 479935
     - path: src/data/process.py
       hash: md5
-      md5: 018d0457a1bd5dca93149e2acefa6b58
-      size: 4638
+      md5: 4b5061fc8328d5dad821378426de33d8
+      size: 4235
     - path: src/data/utils/_depersonalization.py
       hash: md5
-      md5: f5fa6cd06458a62e71b013505dfe554c
-      size: 3538
+      md5: fb97c72d19ba5252dd2d87d6eb99739b
+      size: 4242
+    - path: src/data/utils/general.py
+      hash: md5
+      md5: b713fdfff3d219cd4d256236a48a0525
+      size: 3351
     params:
       params/data.yaml:
         paths.genetics:
@@ -77,12 +79,12 @@ stages:
     outs:
     - path: data/interim/genetics/deleted_data.yaml
       hash: md5
-      md5: d829dbcba736db1972477b29d8d54656
-      size: 13461
+      md5: 3f0155807ef991c820526676a3c0ea41
+      size: 13066
     - path: data/processed/genetics/data.yaml
       hash: md5
-      md5: f5b44c93fcec3db751551f108cc665cf
-      size: 427242
+      md5: 0a658fa0057a2c55ec4c8275f4452f7d
+      size: 418198
   train_models:
     cmd:
     - poetry run train --datatype=genetics --model=bert
@@ -102,30 +104,33 @@ stages:
   prepare_dataset:
     cmd:
     - make del-dep-file path=data/processed/genetics/data.csv
-    - poetry run prepare_dataset --datatype=genetics
+    - poetry run prepare_dataset --datatype=genetics --to_s3=true
     deps:
     - path: data/processed/genetics/data.yaml
       hash: md5
-      md5: f5b44c93fcec3db751551f108cc665cf
-      size: 427242
+      md5: 0a658fa0057a2c55ec4c8275f4452f7d
+      size: 418198
     - path: src/data/process.py
       hash: md5
-      md5: 1f571f104909fe5389d15c5d910041fa
-      size: 4147
+      md5: b3588ea6228dca59e0da0c27351b135d
+      size: 4514
     - path: src/data/utils/_prepare_dataset.py
       hash: md5
-      md5: 25d8c78fe22358463ed9d5c4338cbe5a
-      size: 638
+      md5: ea55e516a956c48c0c5b5f91c9f8181b
+      size: 856
     - path: src/data/utils/general.py
       hash: md5
-      md5: 8439a1485298c0675691d36c229aef3a
-      size: 2455
+      md5: b713fdfff3d219cd4d256236a48a0525
+      size: 3351
     params:
       params/data.yaml:
         paths.genetics:
           raw: data/raw/genetics
           int: data/interim/genetics
           res: data/processed/genetics
+        s3_storage:
+          url: https://storage.yandexcloud.net
+          bucket: mta-processed-objects
       params/models.yaml:
         depers:
           sber:
@@ -147,5 +152,5 @@ stages:
     outs:
     - path: data/processed/genetics/data.csv
       hash: md5
-      md5: c1f560fa62b70ed76e7d7ff716250276
-      size: 402406
+      md5: 3c6c92a56fb4e9c718159daa4b234530
+      size: 393524

@@ -5,7 +5,7 @@ import traceback
 import pandas as pd
 from typing import Union
 from . import root_dir, DEVICE
-from .utils._train import _train
+from .utils._local_train import _local_train
 
 dvc_params = dvc.api.params_show()
 
@@ -31,7 +31,7 @@ def train(datatype: str, model: str, size: Union[str, None] = None) -> None:
 
         df = pd.read_csv(data_path.joinpath("data.csv"))
 
-        _train(df, model_name, res_path, DEVICE)
+        _local_train(df, model_name, res_path, DEVICE)
 
     except Warning as w:
         click.echo(click.style(str(w), fg="yellow"))
